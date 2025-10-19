@@ -58,13 +58,13 @@ const AlertsPanel = () => {
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 100 }}
-            className="fixed top-20 right-8 w-96 max-h-[600px] bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden z-40"
+            className="fixed top-20 right-8 w-96 max-h-[600px] bg-purple-900/95 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden z-40"
           >
             <div className="p-6">
-              <h3 className="text-2xl font-bold text-purple-900 mb-4">{t('alerts.title')}</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">{t('alerts.title')}</h3>
               <div className="space-y-3 max-h-[500px] overflow-y-auto">
                 {alerts.length === 0 ? (
-                  <p className="text-gray-600 text-center py-8">{t('alerts.noAlerts')}</p>
+                  <p className="text-purple-200 text-center py-8">{t('alerts.noAlerts')}</p>
                 ) : (
                   alerts.map((alert) => (
                     <motion.div
@@ -72,8 +72,8 @@ const AlertsPanel = () => {
                       onClick={() => handleAlertClick(alert._id)}
                       className={`p-4 rounded-xl cursor-pointer transition-colors ${
                         alert.viewed
-                          ? 'bg-gray-100 hover:bg-gray-200'
-                          : 'bg-purple-100 hover:bg-purple-200'
+                          ? 'bg-purple-800/50 hover:bg-purple-800'
+                          : 'bg-purple-700/50 hover:bg-purple-700'
                       }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -83,7 +83,7 @@ const AlertsPanel = () => {
                         <div className="flex-1">
                           <p
                             className={`font-medium ${
-                              alert.viewed ? 'text-gray-800' : 'text-purple-900'
+                              alert.viewed ? 'text-purple-200' : 'text-white'
                             }`}
                           >
                             {alert.message}

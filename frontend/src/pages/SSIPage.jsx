@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBenefitsByCategory, calculateBenefit } from '../store/benefitsSlice'
+import { getUserProfile } from '../store/userSlice'
 import AlertsPanel from '../components/AlertsPanel'
 import EligibilityBadge from '../components/EligibilityBadge'
 import axios from 'axios'
@@ -14,6 +15,7 @@ const SSIPage = () => {
   const dispatch = useDispatch()
   const { benefits, loading, calculationResult } = useSelector((state) => state.benefits)
   const { token } = useSelector((state) => state.auth)
+  const { profile } = useSelector((state) => state.user)
 
   const [eligibility, setEligibility] = useState({})
   const [eligibilityLoading, setEligibilityLoading] = useState(true)
@@ -24,6 +26,7 @@ const SSIPage = () => {
 
   useEffect(() => {
     dispatch(getBenefitsByCategory('ssi'))
+    dispatch(getUserProfile())
     fetchEligibility()
   }, [dispatch])
 
@@ -88,8 +91,35 @@ const SSIPage = () => {
         <AlertsPanel />
       </div>
 
+      {/* Total Benefits Summary */}
+      <div className="container mx-auto px-6 pt-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-r from-yellow-500/30 to-orange-500/40 backdrop-blur-sm rounded-2xl p-6 shadow-xl mb-8 border border-yellow-400/20"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-3xl">
+                ☀️
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white">Total SSI & Tax Benefits</h2>
+                <p className="text-yellow-200">Your monthly SSI and tax benefit amount</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-4xl font-bold text-white">
+                ${(profile?.benefits?.ssi || 0).toLocaleString()}
+              </div>
+              <div className="text-yellow-200 text-sm">per month</div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
       {/* Content */}
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-6 pb-12">
         {/* Calculator Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -168,18 +198,18 @@ const SSIPage = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-shadow"
+                  className="bg-purple-900/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-shadow"
                 >
                   <div className="flex items-center space-x-3 mb-4">
                     <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center text-2xl">
                       💰
                     </div>
-                    <h3 className="text-xl font-bold text-purple-900">{benefit.name}</h3>
+                    <h3 className="text-xl font-bold text-white">{benefit.name}</h3>
                   </div>
-                  <p className="text-gray-700 mb-4">{benefit.description}</p>
+                  <p className="text-purple-200 mb-4">{benefit.description}</p>
                   <div className="mb-4">
-                    <p className="text-sm font-semibold text-purple-700 mb-1">Eligibility:</p>
-                    <p className="text-sm text-gray-600">{benefit.eligibility}</p>
+                    <p className="text-sm font-semibold text-purple-300 mb-1">Eligibility:</p>
+                    <p className="text-sm text-purple-200">{benefit.eligibility}</p>
                   </div>
 
                   {/* Eligibility Badge */}
@@ -207,8 +237,8 @@ const SSIPage = () => {
         )}
 
         {!eligibilityLoading && Object.keys(eligibility).length === 0 && (
-          <div className="mt-8 p-6 bg-yellow-50 border-2 border-yellow-200 rounded-2xl">
-            <p className="text-yellow-800 text-center">
+          <div className="mt-8 p-6 bg-yellow-900/50 border-2 border-yellow-600 rounded-2xl">
+            <p className="text-yellow-200 text-center">
               <strong>Complete your onboarding with employment history</strong> to see accurate SSI/SSDI eligibility!
             </p>
             <button

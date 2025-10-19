@@ -1,94 +1,144 @@
-import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import axios from 'axios'
+import { useState, useCallback, useRef } from 'react'
 
-export const useNarration = (pageName) => {
-  const [isNarrating, setIsNarrating] = useState(false)
-  const [narrationText, setNarrationText] = useState('')
-  const { token } = useSelector((state) => state.auth)
-  const { accessibility } = useSelector((state) => state.user)
+const useNarration = () => {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [currentText, setCurrentText] = useState('')
+  const audioRef = useRef(null)
+  const abortControllerRef = useRef(null)
 
-  const playNarration = async () => {
-    if (!accessibility?.narrationEnabled || !token) {
-      console.log('Narration not enabled or no token')
-      return
+  const speak = useCallback(async (text, options = {}) => {
+    if (!text || isPlaying) return
+
+    // Set default faster speech options
+    const speechOptions = {
+      rate: 1.5,
+      ...options
     }
 
-    setIsNarrating(true)
+    // Stop any currently playing audio
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+    }
+
+    // Cancel any ongoing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+
+    // Create new abort controller
+    abortControllerRef.current = new AbortController()
 
     try {
-      const response = await axios.post(
-        '/api/voice/narrate-page',
-        { page: pageName },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      setIsPlaying(true)
+      setCurrentText(text)
 
-      const { text, audio } = response.data
+      // ElevenLabs API configuration
+      const voiceId = 'pNInz6obpgDQGcFmaJgB' // Adam voice (you can change this)
+      const apiKey = process.env.REACT_APP_ELEVEN_LABS_API_KEY || 'your-api-key-here'
 
-      setNarrationText(text)
+      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'audio/mpeg',
+          'Content-Type': 'application/json',
+          'xi-api-key': apiKey,
+        },
+        body: JSON.stringify({
+          text: text,
+          model_id: 'eleven_monolingual_v1',
+          voice_settings: {
+            stability: 0.5,
+            similarity_boost: 0.5,
+            speed: 1.2,  // 20% faster speech
+            ...options.voiceSettings
+          }
+        }),
+        signal: abortControllerRef.current.signal
+      })
 
-      // Convert base64 audio to blob and play
-      const audioBlob = base64ToBlob(audio, 'audio/mpeg')
+      if (!response.ok) {
+        throw new Error(`ElevenLabs API error: ${response.status}`)
+      }
+
+      const audioBlob = await response.blob()
       const audioUrl = URL.createObjectURL(audioBlob)
-      const audioElement = new Audio(audioUrl)
+      
+      const audio = new Audio(audioUrl)
+      audioRef.current = audio
 
-      audioElement.onended = () => {
-        setIsNarrating(false)
+      audio.onended = () => {
+        setIsPlaying(false)
+        setCurrentText('')
         URL.revokeObjectURL(audioUrl)
       }
 
-      audioElement.onerror = () => {
-        setIsNarrating(false)
+      audio.onerror = () => {
+        setIsPlaying(false)
+        setCurrentText('')
         URL.revokeObjectURL(audioUrl)
       }
 
-      await audioElement.play()
+      await audio.play()
+
     } catch (error) {
-      console.error('Narration error:', error)
-      setIsNarrating(false)
+      if (error.name !== 'AbortError') {
+        console.error('Narration error:', error)
+        // Fallback to browser's built-in speech synthesis
+        fallbackSpeak(text, speechOptions)
+      }
+      setIsPlaying(false)
+      setCurrentText('')
     }
-  }
+  }, [isPlaying])
 
-  // Auto-play narration when page loads if enabled
-  useEffect(() => {
-    if (accessibility?.narrationEnabled) {
-      // Delay to allow page to render
-      const timer = setTimeout(() => {
-        playNarration()
-      }, 1000)
+  const fallbackSpeak = useCallback((text, options = {}) => {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.rate = options.rate || 1.5  // Increased from 1 to 1.5 for faster speech
+      utterance.pitch = options.pitch || 1
+      utterance.volume = options.volume || 1
+      
+      utterance.onend = () => {
+        setIsPlaying(false)
+        setCurrentText('')
+      }
+      
+      utterance.onerror = () => {
+        setIsPlaying(false)
+        setCurrentText('')
+      }
 
-      return () => clearTimeout(timer)
+      speechSynthesis.speak(utterance)
+      setIsPlaying(true)
+      setCurrentText(text)
     }
-  }, [pageName, accessibility?.narrationEnabled])
+  }, [])
+
+  const stop = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+    }
+    
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+
+    if ('speechSynthesis' in window) {
+      speechSynthesis.cancel()
+    }
+
+    setIsPlaying(false)
+    setCurrentText('')
+  }, [])
 
   return {
-    isNarrating,
-    narrationText,
-    playNarration,
+    speak,
+    stop,
+    isPlaying,
+    currentText
   }
 }
 
-// Helper function to convert base64 to blob
-function base64ToBlob(base64, contentType) {
-  const byteCharacters = atob(base64)
-  const byteArrays = []
-
-  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-    const slice = byteCharacters.slice(offset, offset + 512)
-    const byteNumbers = new Array(slice.length)
-
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i)
-    }
-
-    const byteArray = new Uint8Array(byteNumbers)
-    byteArrays.push(byteArray)
-  }
-
-  return new Blob(byteArrays, { type: contentType })
-}
-
+export default useNarration

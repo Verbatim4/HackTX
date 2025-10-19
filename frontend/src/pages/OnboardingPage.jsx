@@ -14,9 +14,23 @@ const OnboardingPage = () => {
   const [step, setStep] = useState(1)
   const totalSteps = 5
 
+  // Function to calculate age from date of birth
+  const calculateAge = (dateOfBirth) => {
+    if (!dateOfBirth) return 0
+    const today = new Date()
+    const birthDate = new Date(dateOfBirth)
+    let age = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--
+    }
+    
+    return age
+  }
+
   // Form data
   const [formData, setFormData] = useState({
-    age: '',
     dateOfBirth: '',
     maritalStatus: 'single',
     householdSize: 1,
@@ -88,10 +102,12 @@ const OnboardingPage = () => {
   }
 
   const handleSubmit = async () => {
+    const age = calculateAge(formData.dateOfBirth)
     await dispatch(
       updateUserProfile({
         financialProfile: {
           ...formData,
+          age: age,
           onboardingCompleted: true,
         },
       })
@@ -112,12 +128,12 @@ const OnboardingPage = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-3xl bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl p-8"
+        className="w-full max-w-3xl bg-purple-900/90 backdrop-blur-lg rounded-3xl shadow-2xl p-8"
       >
-        <h1 className="text-4xl font-bold text-purple-900 mb-2 text-center">
+        <h1 className="text-4xl font-bold text-white mb-2 text-center">
           Welcome to Polara!
         </h1>
-        <p className="text-gray-600 text-center mb-8">
+        <p className="text-purple-200 text-center mb-8">
           Let's gather some information to find the best benefits for you
         </p>
 
@@ -133,7 +149,7 @@ const OnboardingPage = () => {
               />
             ))}
           </div>
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm text-purple-200">
             Step {step} of {totalSteps}
           </p>
         </div>
@@ -148,40 +164,34 @@ const OnboardingPage = () => {
               exit={{ opacity: 0, x: -50 }}
               className="space-y-6"
             >
-              <h2 className="text-2xl font-bold text-purple-900 mb-4">Basic Information</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">Basic Information</h2>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Age</label>
-                  <input
-                    type="number"
-                    value={formData.age}
-                    onChange={(e) => updateField('age', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
-                    placeholder="Your age"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
                     Date of Birth
                   </label>
                   <input
                     type="date"
                     value={formData.dateOfBirth}
                     onChange={(e) => updateField('dateOfBirth', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-300 bg-white/90 focus:ring-2 focus:ring-purple-400"
                   />
+                  {formData.dateOfBirth && (
+                    <p className="text-sm text-purple-200 mt-1">
+                      Age: {calculateAge(formData.dateOfBirth)} years old
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
                     Marital Status
                   </label>
                   <select
                     value={formData.maritalStatus}
                     onChange={(e) => updateField('maritalStatus', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-300 bg-white/90 focus:ring-2 focus:ring-purple-400"
                   >
                     <option value="single">Single</option>
                     <option value="married">Married</option>
@@ -191,27 +201,27 @@ const OnboardingPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
                     Household Size
                   </label>
                   <input
                     type="number"
                     value={formData.householdSize}
                     onChange={(e) => updateField('householdSize', parseInt(e.target.value))}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-300 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     min="1"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
                     Number of Children
                   </label>
                   <input
                     type="number"
                     value={formData.numberOfChildren}
                     onChange={(e) => updateField('numberOfChildren', parseInt(e.target.value))}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-300 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     min="0"
                   />
                 </div>
@@ -225,19 +235,19 @@ const OnboardingPage = () => {
                     onChange={(e) => updateField('hasDisability', e.target.checked)}
                     className="w-5 h-5 rounded text-purple-600"
                   />
-                  <span className="text-gray-700">I have a disability</span>
+                  <span className="text-purple-200">I have a disability</span>
                 </label>
 
                 {user?.role === 'veteran' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-purple-200 mb-2">
                       Years of Military Service
                     </label>
                     <input
                       type="number"
                       value={formData.veteranServiceYears}
                       onChange={(e) => updateField('veteranServiceYears', e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-4 py-3 rounded-lg border border-purple-300 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     />
                   </div>
                 )}
@@ -249,7 +259,7 @@ const OnboardingPage = () => {
                     onChange={(e) => updateField('isPregnant', e.target.checked)}
                     className="w-5 h-5 rounded text-purple-600"
                   />
-                  <span className="text-gray-700">Currently pregnant</span>
+                  <span className="text-purple-200">Currently pregnant</span>
                 </label>
               </div>
             </motion.div>

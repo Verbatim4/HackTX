@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBenefitsByCategory } from '../store/benefitsSlice'
+import { getUserProfile } from '../store/userSlice'
 import AlertsPanel from '../components/AlertsPanel'
 import EligibilityBadge from '../components/EligibilityBadge'
 import axios from 'axios'
@@ -14,11 +15,13 @@ const TransportationPage = () => {
   const dispatch = useDispatch()
   const { benefits, loading } = useSelector((state) => state.benefits)
   const { token } = useSelector((state) => state.auth)
+  const { profile } = useSelector((state) => state.user)
   const [eligibility, setEligibility] = useState({})
   const [eligibilityLoading, setEligibilityLoading] = useState(true)
 
   useEffect(() => {
     dispatch(getBenefitsByCategory('transportation'))
+    dispatch(getUserProfile())
     fetchEligibility()
   }, [dispatch])
 
@@ -62,8 +65,35 @@ const TransportationPage = () => {
         <AlertsPanel />
       </div>
 
+      {/* Total Benefits Summary */}
+      <div className="container mx-auto px-6 pt-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-r from-purple-500/30 to-purple-600/40 backdrop-blur-sm rounded-2xl p-6 shadow-xl mb-8 border border-purple-400/20"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-3xl">
+                🚌
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white">Total Transportation Benefits</h2>
+                <p className="text-purple-200">Your monthly transportation benefit amount</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-4xl font-bold text-white">
+                ${(profile?.benefits?.transportation || 0).toLocaleString()}
+              </div>
+              <div className="text-purple-200 text-sm">per month</div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
       {/* Content */}
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-6 pb-12">
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="text-white text-xl">{t('common.loading')}</div>
@@ -76,23 +106,23 @@ const TransportationPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-shadow"
+                  className="bg-purple-900/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-shadow"
               >
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-2xl">
                     🚌
                   </div>
-                  <h3 className="text-xl font-bold text-purple-900">{benefit.name}</h3>
+                  <h3 className="text-xl font-bold text-white">{benefit.name}</h3>
                 </div>
-                <p className="text-gray-700 mb-4">{benefit.description}</p>
+                <p className="text-purple-200 mb-4">{benefit.description}</p>
                 <div className="mb-4">
-                  <p className="text-sm font-semibold text-purple-700 mb-1">Eligibility:</p>
-                  <p className="text-sm text-gray-600">{benefit.eligibility}</p>
+                  <p className="text-sm font-semibold text-purple-300 mb-1">Eligibility:</p>
+                  <p className="text-sm text-purple-200">{benefit.eligibility}</p>
                 </div>
 
                 {/* Note: Transportation programs vary by location */}
-                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800">
+                <div className="mt-4 p-3 bg-blue-900/50 border border-blue-400 rounded-lg">
+                  <p className="text-sm text-blue-200">
                     <strong>Note:</strong> Availability varies by location. Contact your local transit authority.
                   </p>
                 </div>
