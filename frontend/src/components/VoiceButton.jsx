@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,6 +12,17 @@ const VoiceButton = () => {
   const { token } = useSelector((state) => state.auth)
   const [isListening, setIsListening] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [narrationEnabled, setNarrationEnabled] = useState(false)
+
+  // Load/save narration toggle from sessionStorage so the speaker state persists across pages
+  useEffect(() => {
+    const saved = sessionStorage.getItem('polara:narrationEnabled')
+    if (saved !== null) setNarrationEnabled(saved === 'true')
+  }, [])
+
+  useEffect(() => {
+    sessionStorage.setItem('polara:narrationEnabled', String(narrationEnabled))
+  }, [narrationEnabled])
 
   const handleVoiceCommand = async () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -128,7 +139,8 @@ const VoiceButton = () => {
           ></path>
         </svg>
       ) : (
-        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+        // Microphone icon; green glow if narration is enabled
+        <svg className={`w-8 h-8 ${narrationEnabled ? 'text-green-300 drop-shadow-[0_0_6px_rgba(74,222,128,0.8)]' : ''}`} fill="currentColor" viewBox="0 0 20 20">
           <path
             fillRule="evenodd"
             d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"

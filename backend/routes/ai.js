@@ -1,12 +1,11 @@
 import express from 'express';
 import { protect } from '../middleware/auth.js';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import axios from 'axios';
 import VoiceIntent from '../models/VoiceIntent.js';
 
 const router = express.Router();
 
-// Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy-key');
+// Using Gemini via REST (axios)
 
 // @route   POST /api/ai/classify-intent
 // @desc    Classify user intent from transcript
@@ -39,54 +38,76 @@ router.post('/classify-intent', protect, async (req, res) => {
       return res.json({ intent, confidence: 0.8, parameters: {} });
     }
     
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-    
-    const prompt = `You are an AI assistant for Polara, a government benefits platform. 
-    Analyze the following user command and classify the intent. 
-    
-    Available intents:
-    - navigate_healthcare OR check_healthcare OR check_medicaid OR check_medicare: User asks about healthcare, Medicaid, Medicare, or medical benefits
-    - navigate_housing OR check_housing: User asks about housing, rent assistance, Section 8
-    - navigate_food OR check_food OR check_snap: User asks about food benefits, SNAP, food stamps, WIC
-    - navigate_transportation OR check_transportation: User asks about transportation benefits
-    - navigate_ssi OR check_ssi OR check_ssdi: User asks about SSI, SSDI, Social Security, disability payments, tax credits
-    - navigate_profile: User wants to see their profile or settings
-    - calculate_benefit: User wants to calculate a specific benefit amount
-    - get_help: User needs help or explanation
-    - change_language: User wants to change language
-    - adjust_accessibility: User wants to adjust accessibility settings
-    
-    User command: "${transcript}"
-    
-    IMPORTANT: If the user asks to "check" or asks "what is" about a specific benefit (like "check my medicaid" or "what is my SNAP eligibility"), 
-    use the corresponding "check_" intent (e.g., check_medicaid, check_snap).
-    
-    Respond with ONLY a JSON object in this format:
-    {
-      "intent": "the_intent_name",
-      "confidence": 0.95,
-      "parameters": {}
-    }`;
-    
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const allowedIntents = [
+      // Navigation
+      'navigate_dashboard','open_dashboard','back_home',
+      'navigate_profile','open_profile',
+      'navigate_onboarding','start_onboarding','resume_onboarding',
+      'navigate_healthcare','check_healthcare','check_medicaid','check_medicare','open_healthcare',
+      'navigate_housing','check_housing','open_housing',
+      'navigate_food','check_food','check_snap','open_food',
+      'navigate_transportation','check_transportation','open_transportation',
+      'navigate_ssi','check_ssi','check_ssdi','open_ssi',
+
+      // Accessibility panel
+      'open_accessibility_panel','close_accessibility_panel',
+      'toggle_narration_on','toggle_narration_off',
+      'increase_font_size','decrease_font_size','set_font_size_small','set_font_size_medium','set_font_size_large',
+      'enable_high_contrast','disable_high_contrast',
+      'enable_dyslexia_font','disable_dyslexia_font',
+      'set_color_filter_none','set_color_filter_protanopia','set_color_filter_deuteranopia','set_color_filter_tritanopia',
+
+      // Profile updates
+      'open_location_settings','update_location_city','update_location_state',
+      'open_language_settings','change_language_en','change_language_es','change_language_fr','change_language_zh','change_language_hi','change_language_tl','change_language_vi',
+
+      // Benefits overview & actions
+      'open_benefits_overview','check_all_benefits','estimate_transportation_benefit','estimate_food_benefit','estimate_housing_benefit','estimate_healthcare_benefit',
+
+      // Alerts & help
+      'open_alerts','close_alerts','help','contact_support','what_can_i_say',
+
+      // App controls
+      'open_voice','close_voice','log_out','open_profile_settings','save_settings',
+
+      // Misc
+      'scroll_left','scroll_right','go_back','go_forward'
+    ];
+
+    const systemPrompt = `You classify short voice commands into a strict whitelist of intents for a benefits app.\n\nRules:\n- Only output JSON.\n- Map to one intent from the whitelist when clearly implied.\n- If unclear or no match, return intent:null and confidence:0.\n- Prefer 'check_*' when the user asks to check or see eligibility/amounts.\n\nAllowed intents: ${allowedIntents.join(', ')}`;
+    const prompt = `${systemPrompt}\n\nUser command: "${transcript}"\n\nReturn JSON as {"intent": string|null, "confidence": number, "parameters": {}}`;
+
+    // Call Gemini 2.5 Flash via REST
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    const { data } = await axios.post(url, {
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: 'application/json' },
+    });
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
     
     // Parse JSON from response
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    const intent = jsonMatch ? JSON.parse(jsonMatch[0]) : {
-      intent: 'get_help',
-      confidence: 0.5,
-      parameters: {}
-    };
+    let intent;
+    try {
+      intent = JSON.parse(text);
+      if (intent && intent.intent && !allowedIntents.includes(intent.intent)) {
+        intent.intent = null;
+        intent.confidence = 0;
+      }
+    } catch (_) {
+      intent = { intent: null, confidence: 0, parameters: {} };
+    }
     
     // Save intent to database
-    await VoiceIntent.create({
-      userId: req.user._id,
-      transcript,
-      classifiedIntent: intent.intent,
-      confidence: intent.confidence,
-    });
+    try {
+      await VoiceIntent.create({
+        userId: req.user._id,
+        transcript,
+        classifiedIntent: intent.intent,
+        confidence: intent.confidence,
+      });
+    } catch (e) {
+      // non-blocking
+    }
     
     res.json(intent);
   } catch (error) {

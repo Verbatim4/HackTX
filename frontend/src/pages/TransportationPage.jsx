@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +18,19 @@ const TransportationPage = () => {
   const { profile } = useSelector((state) => state.user)
   const [eligibility, setEligibility] = useState({})
   const [eligibilityLoading, setEligibilityLoading] = useState(true)
+  const [location, setLocation] = useState({ city: null, state: profile?.state || 'TX' })
+
+  // Resolve location (best-effort): use profile or geolocation
+  useEffect(() => {
+    if (profile?.city || profile?.state) {
+      setLocation({ city: profile.city || null, state: profile.state || 'TX' })
+    } else if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(() => {
+        // For now, default to Texas city fallback without reverse geocoding service
+        setLocation((prev) => ({ ...prev, state: 'TX' }))
+      })
+    }
+  }, [profile])
 
   useEffect(() => {
     dispatch(getBenefitsByCategory('transportation'))
@@ -39,6 +52,32 @@ const TransportationPage = () => {
       setEligibilityLoading(false)
     }
   }
+
+  // Simple local data-driven estimates for major TX cities
+  const localPrograms = useMemo(() => ({
+    TX: {
+      Austin: { monthlyPass: 48, reducedFare: 0.5, paratransitCredits: 30, seniorDiscountPct: 0.5 },
+      Dallas: { monthlyPass: 96, reducedFare: 0.5, paratransitCredits: 25, seniorDiscountPct: 0.5 },
+      Houston: { monthlyPass: 45, reducedFare: 0.5, paratransitCredits: 35, seniorDiscountPct: 0.5 },
+      'San Antonio': { monthlyPass: 38, reducedFare: 0.5, paratransitCredits: 30, seniorDiscountPct: 0.5 },
+      'El Paso': { monthlyPass: 30, reducedFare: 0.5, paratransitCredits: 20, seniorDiscountPct: 0.5 },
+      default: { monthlyPass: 40, reducedFare: 0.5, paratransitCredits: 20, seniorDiscountPct: 0.5 },
+    },
+  }), [])
+
+  const userAge = profile?.financialProfile?.age
+  const hasDisability = profile?.financialProfile?.hasDisability
+  const cityData = localPrograms[location.state]?.[location.city || ''] || localPrograms[location.state]?.default
+
+  const estimated = useMemo(() => {
+    if (!cityData) return null
+    const basePass = cityData.monthlyPass
+    const reduced = userAge >= 65 || hasDisability ? basePass * (1 - cityData.reducedFare) : 0
+    const seniorSavings = userAge >= 65 ? basePass * cityData.seniorDiscountPct : 0
+    const paratransit = hasDisability ? cityData.paratransitCredits : 0
+    const total = Math.round(reduced + seniorSavings + paratransit)
+    return { basePass, reduced, seniorSavings, paratransit, total }
+  }, [cityData, userAge, hasDisability])
 
   return (
     <div className="min-h-screen gradient-bg">
@@ -83,9 +122,11 @@ const TransportationPage = () => {
               </div>
             </div>
             <div className="text-right">
-              <div className="text-4xl font-bold text-white">
-                ${(profile?.benefits?.transportation || 0).toLocaleString()}
-              </div>
+              {estimated ? (
+                <div className="text-4xl font-bold text-white">${estimated.total.toLocaleString()}</div>
+              ) : (
+                <div className="text-4xl font-bold text-white">${(profile?.benefits?.transportation || 0).toLocaleString()}</div>
+              )}
               <div className="text-purple-200 text-sm">per month</div>
             </div>
           </div>
@@ -100,6 +141,25 @@ const TransportationPage = () => {
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {estimated && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-purple-900/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-purple-400/20"
+              >
+                <h3 className="text-xl font-bold text-white mb-2">Local Estimates {location.city ? `- ${location.city}` : ''}</h3>
+                <p className="text-purple-200 mb-4">Based on common programs in your area</p>
+                <div className="space-y-2 text-purple-100">
+                  <div className="flex justify-between"><span>Reduced Fare Savings</span><span>${Math.round(estimated.reduced).toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span>Senior Discount Savings</span><span>${Math.round(estimated.seniorSavings).toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span>Paratransit Credits</span><span>${Math.round(estimated.paratransit).toLocaleString()}</span></div>
+                </div>
+                <div className="mt-4 p-3 bg-green-900/40 border border-green-400/40 rounded-lg text-green-100">
+                  Estimated Total: <span className="font-bold text-white">${estimated.total.toLocaleString()}</span> / month
+                </div>
+                <p className="text-xs text-purple-300 mt-2">Estimates depend on age/disability and typical agency rules.</p>
+              </motion.div>
+            )}
             {benefits.map((benefit, index) => (
               <motion.div
                 key={benefit.id}
@@ -119,13 +179,13 @@ const TransportationPage = () => {
                   <p className="text-sm font-semibold text-purple-300 mb-1">Eligibility:</p>
                   <p className="text-sm text-purple-200">{benefit.eligibility}</p>
                 </div>
-
-                {/* Note: Transportation programs vary by location */}
-                <div className="mt-4 p-3 bg-blue-900/50 border border-blue-400 rounded-lg">
-                  <p className="text-sm text-blue-200">
-                    <strong>Note:</strong> Availability varies by location. Contact your local transit authority.
-                  </p>
-                </div>
+                {!estimated && (
+                  <div className="mt-4 p-3 bg-blue-900/50 border border-blue-400 rounded-lg">
+                    <p className="text-sm text-blue-200">
+                      <strong>Note:</strong> Availability varies by location. Contact your local transit authority.
+                    </p>
+                  </div>
+                )}
 
                 <a
                   href={benefit.website}

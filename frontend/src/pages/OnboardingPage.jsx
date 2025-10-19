@@ -128,7 +128,7 @@ const OnboardingPage = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-3xl bg-purple-900/90 backdrop-blur-lg rounded-3xl shadow-2xl p-8"
+        className="w-full max-w-4xl bg-purple-900/80 border border-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 text-white"
       >
         <h1 className="text-4xl font-bold text-white mb-2 text-center">
           Welcome to Polara!
@@ -175,7 +175,7 @@ const OnboardingPage = () => {
                     type="date"
                     value={formData.dateOfBirth}
                     onChange={(e) => updateField('dateOfBirth', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-purple-300 bg-white/90 focus:ring-2 focus:ring-purple-400"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                   />
                   {formData.dateOfBirth && (
                     <p className="text-sm text-purple-200 mt-1">
@@ -191,7 +191,7 @@ const OnboardingPage = () => {
                   <select
                     value={formData.maritalStatus}
                     onChange={(e) => updateField('maritalStatus', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-purple-300 bg-white/90 focus:ring-2 focus:ring-purple-400"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                   >
                     <option value="single">Single</option>
                     <option value="married">Married</option>
@@ -208,7 +208,7 @@ const OnboardingPage = () => {
                     type="number"
                     value={formData.householdSize}
                     onChange={(e) => updateField('householdSize', parseInt(e.target.value))}
-                    className="w-full px-4 py-3 rounded-lg border border-purple-300 bg-white/90 focus:ring-2 focus:ring-purple-400"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     min="1"
                   />
                 </div>
@@ -221,7 +221,7 @@ const OnboardingPage = () => {
                     type="number"
                     value={formData.numberOfChildren}
                     onChange={(e) => updateField('numberOfChildren', parseInt(e.target.value))}
-                    className="w-full px-4 py-3 rounded-lg border border-purple-300 bg-white/90 focus:ring-2 focus:ring-purple-400"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     min="0"
                   />
                 </div>
@@ -243,11 +243,11 @@ const OnboardingPage = () => {
                     <label className="block text-sm font-medium text-purple-200 mb-2">
                       Years of Military Service
                     </label>
-                    <input
+                  <input
                       type="number"
                       value={formData.veteranServiceYears}
                       onChange={(e) => updateField('veteranServiceYears', e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-purple-300 bg-white/90 focus:ring-2 focus:ring-purple-400"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     />
                   </div>
                 )}
@@ -274,32 +274,32 @@ const OnboardingPage = () => {
               exit={{ opacity: 0, x: -50 }}
               className="space-y-6"
             >
-              <h2 className="text-2xl font-bold text-purple-900 mb-4">
+              <h2 className="text-2xl font-bold text-white mb-4">
                 Income & Employment
               </h2>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
                     Current Annual Income ($)
                   </label>
                   <input
                     type="number"
                     value={formData.currentIncome}
                     onChange={(e) => updateField('currentIncome', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     placeholder="50000"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
                     Employment Status
                   </label>
                   <select
                     value={formData.employmentStatus}
                     onChange={(e) => updateField('employmentStatus', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                   >
                     <option value="employed">Employed</option>
                     <option value="unemployed">Unemployed</option>
@@ -310,21 +310,21 @@ const OnboardingPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
                     Total Years Worked
                   </label>
                   <input
                     type="number"
                     value={formData.totalWorkYears}
                     onChange={(e) => updateField('totalWorkYears', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     placeholder="20"
                   />
                 </div>
               </div>
 
               <div className="border-t pt-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                <h3 className="text-lg font-semibold text-purple-200 mb-4">
                   Employment History (Optional but helps with SSI calculation)
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
@@ -335,7 +335,7 @@ const OnboardingPage = () => {
                     onChange={(e) =>
                       setEmploymentEntry({ ...employmentEntry, employer: e.target.value })
                     }
-                    className="px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                   />
                   <input
                     type="number"
@@ -344,7 +344,7 @@ const OnboardingPage = () => {
                     onChange={(e) =>
                       setEmploymentEntry({ ...employmentEntry, annualIncome: e.target.value })
                     }
-                    className="px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                   />
                   <input
                     type="number"
@@ -353,7 +353,7 @@ const OnboardingPage = () => {
                     onChange={(e) =>
                       setEmploymentEntry({ ...employmentEntry, startYear: e.target.value })
                     }
-                    className="px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                   />
                   <input
                     type="number"
@@ -362,12 +362,12 @@ const OnboardingPage = () => {
                     onChange={(e) =>
                       setEmploymentEntry({ ...employmentEntry, endYear: e.target.value })
                     }
-                    className="px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                   />
                 </div>
                 <button
                   onClick={addEmploymentHistory}
-                  className="px-6 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200"
+                  className="px-6 py-2 bg-purple-600/30 text-purple-100 rounded-lg hover:bg-purple-600/50 border border-purple-400/40"
                 >
                   Add Employment
                 </button>
@@ -395,47 +395,47 @@ const OnboardingPage = () => {
               exit={{ opacity: 0, x: -50 }}
               className="space-y-6"
             >
-              <h2 className="text-2xl font-bold text-purple-900 mb-4">Housing & Assets</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">Housing & Assets</h2>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
                     Monthly Rent/Mortgage ($)
                   </label>
                   <input
                     type="number"
                     value={formData.monthlyRent}
                     onChange={(e) => updateField('monthlyRent', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     placeholder="1200"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
                     Monthly Utilities ($)
                   </label>
                   <input
                     type="number"
                     value={formData.monthlyUtilities}
                     onChange={(e) => updateField('monthlyUtilities', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     placeholder="150"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-purple-200 mb-2">
                     Total Assets ($)
                   </label>
                   <input
                     type="number"
                     value={formData.assets}
                     onChange={(e) => updateField('assets', e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     placeholder="Savings, investments, property value"
                   />
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-purple-200 mt-1">
                     Include savings, investments, and property values
                   </p>
                 </div>
@@ -452,12 +452,12 @@ const OnboardingPage = () => {
               exit={{ opacity: 0, x: -50 }}
               className="space-y-6"
             >
-              <h2 className="text-2xl font-bold text-purple-900 mb-4">
+              <h2 className="text-2xl font-bold text-white mb-4">
                 Health & Medical Conditions
               </h2>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-purple-200 mb-2">
                   Medical Conditions (Optional - helps with Medicaid eligibility)
                 </label>
                 <div className="flex space-x-2 mb-4">
@@ -466,7 +466,7 @@ const OnboardingPage = () => {
                     value={medicalCondition}
                     onChange={(e) => setMedicalCondition(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addMedicalCondition()}
-                    className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="flex-1 px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     placeholder="e.g., Diabetes, Hypertension"
                   />
                   <button
@@ -513,10 +513,10 @@ const OnboardingPage = () => {
               exit={{ opacity: 0, x: -50 }}
               className="space-y-6"
             >
-              <h2 className="text-2xl font-bold text-purple-900 mb-4">Current Benefits</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">Current Benefits</h2>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-purple-200 mb-2">
                   Are you currently receiving any benefits?
                 </label>
                 <div className="flex space-x-2 mb-4">
@@ -525,7 +525,7 @@ const OnboardingPage = () => {
                     value={currentBenefit}
                     onChange={(e) => setCurrentBenefit(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addCurrentBenefit()}
-                    className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                    className="flex-1 px-4 py-3 rounded-lg border border-purple-400/40 bg-white/90 focus:ring-2 focus:ring-purple-400"
                     placeholder="e.g., SNAP, Medicaid, Medicare"
                   />
                   <button
@@ -561,11 +561,11 @@ const OnboardingPage = () => {
                 )}
               </div>
 
-              <div className="mt-8 p-6 bg-purple-50 rounded-lg">
-                <h3 className="text-lg font-semibold text-purple-900 mb-2">
+              <div className="mt-8 p-6 bg-purple-800/40 border border-purple-400/30 rounded-lg">
+                <h3 className="text-lg font-semibold text-white mb-2">
                   You're almost done!
                 </h3>
-                <p className="text-gray-700">
+                <p className="text-purple-200">
                   Based on the information you've provided, we'll show you all the benefits you
                   may qualify for and help you maximize your assistance.
                 </p>

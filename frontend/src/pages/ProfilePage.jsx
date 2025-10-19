@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateUserProfile } from '../store/userSlice'
+import { updateUserProfile, getUserProfile } from '../store/userSlice'
 import { logout } from '../store/authSlice'
 import VoiceButton from '../components/VoiceButton'
 import AlertsPanel from '../components/AlertsPanel'
@@ -17,21 +17,56 @@ const ProfilePage = () => {
 
   const [name, setName] = useState('')
   const [language, setLanguage] = useState('en')
-  const [fontSize, setFontSize] = useState('medium')
-  const [colorFilter, setColorFilter] = useState('none')
-  const [dyslexiaFont, setDyslexiaFont] = useState(false)
-  const [highContrast, setHighContrast] = useState(false)
-  const [narrationEnabled, setNarrationEnabled] = useState(false)
+  const [stateCode, setStateCode] = useState('TX')
+  const [city, setCity] = useState('')
+  // Onboarding fields now editable in Profile
+  const [financial, setFinancial] = useState({
+    dateOfBirth: '',
+    maritalStatus: 'single',
+    householdSize: 1,
+    numberOfChildren: 0,
+    currentIncome: '',
+    employmentStatus: 'employed',
+    totalWorkYears: '',
+    monthlyRent: '',
+    monthlyUtilities: '',
+    hasDisability: false,
+    isPregnant: false,
+    isVeteran: false,
+    veteranServiceYears: '',
+    medicalConditions: [],
+    currentBenefits: [],
+  })
+
+  useEffect(() => {
+    // Ensure latest profile data is loaded when opening Profile
+    dispatch(getUserProfile())
+  }, [dispatch])
 
   useEffect(() => {
     if (profile) {
       setName(profile.name || '')
       setLanguage(profile.language || 'en')
-      setFontSize(profile.accessibility?.fontSize || 'medium')
-      setColorFilter(profile.accessibility?.colorFilter || 'none')
-      setDyslexiaFont(profile.accessibility?.dyslexiaFont || false)
-      setHighContrast(profile.accessibility?.highContrast || false)
-      setNarrationEnabled(profile.accessibility?.narrationEnabled || false)
+      setStateCode(profile.state || 'TX')
+      setCity(profile.city || '')
+      const fp = profile.financialProfile || {}
+      setFinancial({
+        dateOfBirth: fp.dateOfBirth || '',
+        maritalStatus: fp.maritalStatus || 'single',
+        householdSize: fp.householdSize ?? 1,
+        numberOfChildren: fp.numberOfChildren ?? 0,
+        currentIncome: fp.currentIncome ?? '',
+        employmentStatus: fp.employmentStatus || 'employed',
+        totalWorkYears: fp.totalWorkYears ?? '',
+        monthlyRent: fp.monthlyRent ?? '',
+        monthlyUtilities: fp.monthlyUtilities ?? '',
+        hasDisability: !!fp.hasDisability,
+        isPregnant: !!fp.isPregnant,
+        isVeteran: profile?.role === 'veteran' || !!fp.isVeteran,
+        veteranServiceYears: fp.veteranServiceYears ?? '',
+        medicalConditions: fp.medicalConditions || [],
+        currentBenefits: fp.currentBenefits || [],
+      })
     } else if (user) {
       setName(user.name || '')
       setLanguage(user.language || 'en')
@@ -39,19 +74,8 @@ const ProfilePage = () => {
   }, [profile, user])
 
   const handleSave = async () => {
-    await dispatch(
-      updateUserProfile({
-        name,
-        language,
-        accessibility: {
-          fontSize,
-          colorFilter,
-          dyslexiaFont,
-          highContrast,
-          narrationEnabled,
-        },
-      })
-    )
+    await dispatch(updateUserProfile({ name, language, financialProfile: financial }))
+    await dispatch(updateUserProfile({ state: stateCode, city }))
     i18n.changeLanguage(language)
     alert('Profile updated successfully!')
   }
@@ -101,19 +125,19 @@ const ProfilePage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl"
+          className="bg-purple-900/80 border border-white/10 backdrop-blur-2xl rounded-2xl p-8 shadow-2xl text-white"
         >
           {/* Basic Info */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-purple-900 mb-6">Basic Information</h2>
+            <h2 className="text-2xl font-bold text-white mb-6">Basic Information</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                <label className="block text-sm font-medium text-purple-200 mb-2">Name</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-black placeholder-gray-500"
                 />
               </div>
             </div>
@@ -121,11 +145,11 @@ const ProfilePage = () => {
 
           {/* Language Settings */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-purple-900 mb-6">{t('profile.language')}</h2>
+            <h2 className="text-2xl font-bold text-white mb-6">{t('profile.language')}</h2>
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-black"
             >
               {languages.map((lang) => (
                 <option key={lang.code} value={lang.code}>
@@ -135,79 +159,75 @@ const ProfilePage = () => {
             </select>
           </div>
 
-          {/* Accessibility Settings */}
+          {/* Location Settings */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-purple-900 mb-6">{t('profile.accessibility')}</h2>
-            
-            {/* Font Size */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('profile.fontSize')}
-              </label>
-              <div className="flex space-x-4">
-                {['small', 'medium', 'large'].map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setFontSize(size)}
-                    className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                      fontSize === size
-                        ? 'bg-purple-600 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    {t(`accessibility.${size}`)}
-                  </button>
-                ))}
+            <h2 className="text-2xl font-bold text-white mb-6">Location</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">State</label>
+                <input type="text" value={stateCode} onChange={(e)=>setStateCode(e.target.value.toUpperCase())} className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white text-black focus:ring-2 focus:ring-purple-400 placeholder-gray-500" placeholder="e.g., TX" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-purple-200 mb-2">City</label>
+                <input type="text" value={city} onChange={(e)=>setCity(e.target.value)} className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white text-black focus:ring-2 focus:ring-purple-400 placeholder-gray-500" placeholder="e.g., Austin" />
               </div>
             </div>
+          </div>
 
-            {/* Color Blindness Filter */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('profile.colorBlindness')}
+          {/* Financial / Onboarding Settings */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-white mb-6">Onboarding Settings</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-purple-100 mb-2">Date of Birth</label>
+                <input type="date" value={financial.dateOfBirth || ''} onChange={(e)=>setFinancial({...financial, dateOfBirth: e.target.value})} className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white text-black focus:ring-2 focus:ring-purple-400 placeholder-gray-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-purple-100 mb-2">Marital Status</label>
+                <select value={financial.maritalStatus} onChange={(e)=>setFinancial({...financial, maritalStatus:e.target.value})} className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white text-black focus:ring-2 focus:ring-purple-400">
+                  <option value="single">Single</option>
+                  <option value="married">Married</option>
+                  <option value="divorced">Divorced</option>
+                  <option value="widowed">Widowed</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-purple-100 mb-2">Household Size</label>
+                <input type="number" value={financial.householdSize} onChange={(e)=>setFinancial({...financial, householdSize: parseInt(e.target.value)})} className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white text-black focus:ring-2 focus:ring-purple-400 placeholder-gray-500" placeholder="e.g., 2" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-purple-100 mb-2">Number of Children</label>
+                <input type="number" value={financial.numberOfChildren} onChange={(e)=>setFinancial({...financial, numberOfChildren: parseInt(e.target.value)})} className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white text-black focus:ring-2 focus:ring-purple-400 placeholder-gray-500" placeholder="e.g., 0" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-purple-100 mb-2">Current Annual Income ($)</label>
+                <input type="number" value={financial.currentIncome} onChange={(e)=>setFinancial({...financial, currentIncome: e.target.value})} className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white text-black focus:ring-2 focus:ring-purple-400 placeholder-gray-500" placeholder="e.g., 50000" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-purple-100 mb-2">Employment Status</label>
+                <select value={financial.employmentStatus} onChange={(e)=>setFinancial({...financial, employmentStatus:e.target.value})} className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white text-black focus:ring-2 focus:ring-purple-400">
+                  <option value="employed">Employed</option>
+                  <option value="unemployed">Unemployed</option>
+                  <option value="retired">Retired</option>
+                  <option value="disabled">Disabled</option>
+                  <option value="self-employed">Self-Employed</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-purple-100 mb-2">Monthly Rent/Mortgage ($)</label>
+                <input type="number" value={financial.monthlyRent} onChange={(e)=>setFinancial({...financial, monthlyRent:e.target.value})} className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white text-black focus:ring-2 focus:ring-purple-400 placeholder-gray-500" placeholder="e.g., 1200" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-purple-100 mb-2">Monthly Utilities ($)</label>
+                <input type="number" value={financial.monthlyUtilities} onChange={(e)=>setFinancial({...financial, monthlyUtilities:e.target.value})} className="w-full px-4 py-3 rounded-lg border border-purple-400/40 bg-white text-black focus:ring-2 focus:ring-purple-400 placeholder-gray-500" placeholder="e.g., 150" />
+              </div>
+              <label className="flex items-center space-x-3">
+                <input type="checkbox" checked={!!financial.hasDisability} onChange={(e)=>setFinancial({...financial, hasDisability:e.target.checked})} className="w-5 h-5 rounded text-purple-600" />
+                <span className="text-purple-100">I have a disability</span>
               </label>
-              <select
-                value={colorFilter}
-                onChange={(e) => setColorFilter(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              >
-                <option value="none">{t('accessibility.none')}</option>
-                <option value="protanopia">{t('accessibility.protanopia')}</option>
-                <option value="deuteranopia">{t('accessibility.deuteranopia')}</option>
-                <option value="tritanopia">{t('accessibility.tritanopia')}</option>
-              </select>
-            </div>
-
-            {/* Toggle Options */}
-            <div className="space-y-4">
-              <label className="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer">
-                <span className="font-medium text-gray-700">{t('profile.dyslexiaFont')}</span>
-                <input
-                  type="checkbox"
-                  checked={dyslexiaFont}
-                  onChange={(e) => setDyslexiaFont(e.target.checked)}
-                  className="w-6 h-6 rounded text-purple-600 focus:ring-purple-500"
-                />
-              </label>
-
-              <label className="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer">
-                <span className="font-medium text-gray-700">{t('profile.highContrast')}</span>
-                <input
-                  type="checkbox"
-                  checked={highContrast}
-                  onChange={(e) => setHighContrast(e.target.checked)}
-                  className="w-6 h-6 rounded text-purple-600 focus:ring-purple-500"
-                />
-              </label>
-
-              <label className="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer">
-                <span className="font-medium text-gray-700">{t('profile.narration')}</span>
-                <input
-                  type="checkbox"
-                  checked={narrationEnabled}
-                  onChange={(e) => setNarrationEnabled(e.target.checked)}
-                  className="w-6 h-6 rounded text-purple-600 focus:ring-purple-500"
-                />
+              <label className="flex items-center space-x-3">
+                <input type="checkbox" checked={!!financial.isPregnant} onChange={(e)=>setFinancial({...financial, isPregnant:e.target.checked})} className="w-5 h-5 rounded text-purple-600" />
+                <span className="text-purple-100">Currently pregnant</span>
               </label>
             </div>
           </div>

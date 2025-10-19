@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserProfile, updateUserProfile } from '../store/userSlice'
+import { getUserProfile, updateUserProfile, setAccessibility } from '../store/userSlice'
 import AlertsPanel from '../components/AlertsPanel'
 import useNarration from '../hooks/useNarration'
 import axios from 'axios'
@@ -19,6 +19,9 @@ const Dashboard = () => {
   const [isListening, setIsListening] = useState(false)
   const [showAccessibility, setShowAccessibility] = useState(false)
   const [stars, setStars] = useState([])
+  const [heardText, setHeardText] = useState('')
+  const [classifiedIntent, setClassifiedIntent] = useState(null)
+  const [showVoiceBubble, setShowVoiceBubble] = useState(false)
   
   // Narration functionality
   const { speak, stop, isPlaying, currentText } = useNarration()
@@ -44,6 +47,19 @@ const Dashboard = () => {
     setStars(newStars)
   }, [dispatch])
 
+  // Load narration toggle from sessionStorage on mount
+  useEffect(() => {
+    const saved = sessionStorage.getItem('polara:narrationEnabled')
+    if (saved !== null) {
+      setNarrationEnabled(saved === 'true')
+    }
+  }, [])
+
+  // Persist narration toggle to sessionStorage whenever it changes
+  useEffect(() => {
+    sessionStorage.setItem('polara:narrationEnabled', String(narrationEnabled))
+  }, [narrationEnabled])
+
   // Load accessibility settings from profile
   useEffect(() => {
     if (profile?.accessibility) {
@@ -61,6 +77,18 @@ const Dashboard = () => {
       stop()
     }
   }, [narrationEnabled, stop])
+
+  // Reflect local accessibility panel changes immediately in global app classes
+  useEffect(() => {
+    const accessibilitySettings = {
+      fontSize,
+      colorFilter,
+      dyslexiaFont,
+      highContrast,
+      narrationEnabled,
+    }
+    dispatch(setAccessibility(accessibilitySettings))
+  }, [fontSize, colorFilter, dyslexiaFont, highContrast, narrationEnabled, dispatch])
 
   // Text hover handlers
   const handleTextHover = useCallback((text) => {
@@ -115,8 +143,8 @@ const Dashboard = () => {
       icon: '🚌',
       color: '#a78bfa',
       size: 70,
-      orbitRadius: 350,
-      angle: 315,
+      orbitRadius: 340,
+      angle: 300,
       route: '/transportation',
       benefitAmount: profile?.benefits?.transportation || 0,
     },
@@ -156,10 +184,14 @@ const Dashboard = () => {
 
     recognition.onstart = () => {
       setIsListening(true)
+      setShowVoiceBubble(true)
+      setHeardText('Listening...')
+      setClassifiedIntent(null)
     }
 
     recognition.onresult = async (event) => {
       const transcript = event.results[0][0].transcript
+      setHeardText(transcript)
       setIsListening(false)
 
       try {
@@ -174,6 +206,7 @@ const Dashboard = () => {
         )
 
         const { intent } = response.data
+        setClassifiedIntent(intent || null)
 
         switch (intent) {
           case 'navigate_healthcare':
@@ -206,8 +239,12 @@ const Dashboard = () => {
           default:
             console.log('Intent not recognized:', intent)
         }
+        // hide bubble after a short delay
+        setTimeout(() => setShowVoiceBubble(false), 3000)
       } catch (error) {
         console.error('Voice command error:', error)
+        setClassifiedIntent('error')
+        setTimeout(() => setShowVoiceBubble(false), 3000)
       }
     }
 
@@ -287,13 +324,16 @@ const Dashboard = () => {
         {orbits.map((radius, idx) => (
           <div
             key={`orbit-${idx}`}
-            className="absolute rounded-full border border-white/10"
+            className="absolute rounded-full border"
             style={{
               width: `${radius * 2}px`,
               height: `${radius * 2}px`,
               left: '50%',
               top: '50%',
               transform: 'translate(-50%, -50%)',
+              borderColor: 'rgba(255,255,255,0.25)',
+              boxShadow: '0 0 12px rgba(255,255,255,0.12) inset, 0 0 24px rgba(255,255,255,0.06) inset',
+              backdropFilter: 'blur(1px)'
             }}
           />
         ))}
@@ -392,6 +432,15 @@ const Dashboard = () => {
               <motion.div
                 className="w-full h-full rounded-full shadow-lg flex items-center justify-center relative"
                 style={{ backgroundColor: planet.color }}
+                animate={{
+                  y: [0, -8, 0],
+                  x: [0, 2, 0],
+                }}
+                transition={{
+                  duration: 3 + (index % 3),
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
               >
                 <div className="text-center">
                   <div className="text-4xl">{planet.icon}</div>
@@ -439,61 +488,45 @@ const Dashboard = () => {
 
       {/* Bottom Controls - Single Row */}
       <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-4 z-20">
-        <motion.button
-          onClick={handleVoiceCommand}
-          className={`w-12 h-12 rounded-full ${
-            isListening ? 'bg-red-500' : 'bg-white/20'
-          } hover:bg-white/30 flex items-center justify-center transition-colors`}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          animate={isListening ? { scale: [1, 1.1, 1] } : {}}
-          transition={isListening ? { repeat: Infinity, duration: 1 } : {}}
-          aria-label="Voice Commands"
-        >
-          {isListening ? (
-            <motion.div
-              className="w-4 h-4 bg-white rounded-full"
-              animate={{ scale: [1, 1.5, 1] }}
-              transition={{ repeat: Infinity, duration: 0.5 }}
-            />
-          ) : (
-            <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"
-                clipRule="evenodd"
-              />
-            </svg>
-          )}
-        </motion.button>
-        
-        <motion.button
-          onClick={() => setNarrationEnabled(!narrationEnabled)}
-          className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 relative ${
-            narrationEnabled 
-              ? 'bg-green-500/80 hover:bg-green-400/80 shadow-lg shadow-green-500/30' 
-              : 'bg-white/20 hover:bg-white/30'
-          }`}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          aria-label={narrationEnabled ? "Disable Voice Narration" : "Enable Voice Narration"}
-        >
-          <svg className={`w-6 h-6 ${narrationEnabled ? 'text-white' : 'text-white'}`} fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z"
-              clipRule="evenodd"
-            />
-          </svg>
-          {narrationEnabled && (
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full flex items-center justify-center">
-              <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
+        <div className="relative">
+          {/* Live transcript / intent bubble */}
+          {showVoiceBubble && (
+            <div className="absolute -top-16 left-1/2 -translate-x-1/2 bg-white/95 text-purple-900 px-3 py-2 rounded-xl shadow-2xl whitespace-nowrap">
+              <span className="text-xs font-semibold">
+                {classifiedIntent ? `Intent: ${classifiedIntent}` : heardText}
+              </span>
+              <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-6 border-r-6 border-t-6 border-transparent border-t-white/95"></div>
             </div>
           )}
-        </motion.button>
-        
+          <motion.button
+            onClick={handleVoiceCommand}
+            className={`w-12 h-12 rounded-full ${
+              isListening ? 'bg-red-500' : 'bg-white/20'
+            } hover:bg-white/30 flex items-center justify-center transition-colors`}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            animate={isListening ? { scale: [1, 1.1, 1] } : {}}
+            transition={isListening ? { repeat: Infinity, duration: 1 } : {}}
+            aria-label="Voice Commands"
+          >
+            {isListening ? (
+              <motion.div
+                className="w-4 h-4 bg-white rounded-full"
+                animate={{ scale: [1, 1.5, 1] }}
+                transition={{ repeat: Infinity, duration: 0.5 }}
+              />
+            ) : (
+              <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            )}
+          </motion.button>
+        </div>
+        {/* Accessibility panel button (person icon) */}
         <motion.button
           onClick={() => setShowAccessibility(!showAccessibility)}
           className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center"
@@ -501,7 +534,26 @@ const Dashboard = () => {
           aria-label="Accessibility"
         >
           <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
+            <path d="M10 2a2 2 0 110 4 2 2 0 010-4zM3 7a1 1 0 011-1h12a1 1 0 110 2h-3v7a1 1 0 11-2 0V8H9v7a1 1 0 11-2 0V8H4a1 1 0 01-1-1z" />
+          </svg>
+        </motion.button>
+
+        {/* Narration toggle (speaker icon) */}
+        <motion.button
+          onClick={() => setNarrationEnabled(!narrationEnabled)}
+          className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
+            narrationEnabled ? 'bg-green-500/80 hover:bg-green-400/80' : 'bg-white/20 hover:bg-white/30'
+          }`}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label={narrationEnabled ? 'Disable Voice Narration' : 'Enable Voice Narration'}
+        >
+          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fillRule="evenodd"
+              d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z"
+              clipRule="evenodd"
+            />
           </svg>
         </motion.button>
       </div>
