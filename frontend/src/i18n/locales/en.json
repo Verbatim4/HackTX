@@ -1,0 +1,109 @@
+{
+  "app": {
+    "title": "POLARA",
+    "tagline": "Your Financial North Star. Always in Orbit."
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "createAccount": "Create Account",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "createPassword": "Create Password",
+    "secureLogin": "Secure Login",
+    "joinUs": "Join us!",
+    "forgotPassword": "Forgot Password?",
+    "loginWithGoogle": "Login with Google",
+    "termsAgreement": "By joining, you are agreeing to our terms and conditions.",
+    "swipeToStart": "Swipe right to start"
+  },
+  "dashboard": {
+    "welcome": "Welcome to your dashboard",
+    "healthcare": "Healthcare",
+    "housing": "Housing",
+    "food": "Food",
+    "transportation": "Transportation",
+    "ssi": "SSI & Taxes"
+  },
+  "benefits": {
+    "healthcare": {
+      "title": "Healthcare Benefits",
+      "medicaid": "Medicaid",
+      "medicare": "Medicare",
+      "aca": "ACA Subsidies",
+      "tricare": "TRICARE",
+      "va": "VA Health Care"
+    },
+    "housing": {
+      "title": "Housing Benefits",
+      "section8": "Section 8",
+      "publicHousing": "Public Housing",
+      "hudvash": "HUD-VASH",
+      "liheap": "LIHEAP",
+      "era": "Emergency Rental Assistance"
+    },
+    "food": {
+      "title": "Food Benefits",
+      "snap": "SNAP",
+      "wic": "WIC",
+      "csfp": "Senior Food Program",
+      "tefap": "Emergency Food Assistance"
+    },
+    "transportation": {
+      "title": "Transportation Benefits",
+      "nemt": "Medical Transportation",
+      "paratransit": "Paratransit",
+      "veterans": "Veterans Transportation"
+    },
+    "ssi": {
+      "title": "SSI & Tax Benefits",
+      "ssi": "Supplemental Security Income",
+      "ssdi": "Social Security Disability",
+      "eitc": "Earned Income Tax Credit",
+      "ctc": "Child Tax Credit"
+    }
+  },
+  "profile": {
+    "title": "Profile Settings",
+    "language": "Language",
+    "accessibility": "Accessibility",
+    "fontSize": "Font Size",
+    "colorBlindness": "Color Blindness Filter",
+    "dyslexiaFont": "Dyslexia-Friendly Font",
+    "highContrast": "High Contrast Mode",
+    "narration": "Voice Narration"
+  },
+  "accessibility": {
+    "small": "Small",
+    "medium": "Medium",
+    "large": "Large",
+    "none": "None",
+    "protanopia": "Protanopia (Red-Blind)",
+    "deuteranopia": "Deuteranopia (Green-Blind)",
+    "tritanopia": "Tritanopia (Blue-Blind)"
+  },
+  "voice": {
+    "listening": "Listening...",
+    "processing": "Processing command...",
+    "clickToSpeak": "Click to speak"
+  },
+  "alerts": {
+    "title": "Notifications",
+    "noAlerts": "No new alerts",
+    "incomeChange": "Income Change Detected",
+    "ruleUpdate": "Benefit Rule Updated",
+    "benefitAdjustment": "Benefit Amount Adjusted"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "calculate": "Calculate",
+    "learnMore": "Learn More",
+    "back": "Back",
+    "next": "Next"
+  }
+}
+

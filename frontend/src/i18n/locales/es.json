@@ -1,0 +1,109 @@
+{
+  "app": {
+    "title": "POLARA",
+    "tagline": "Tu Estrella del Norte Financiera. Siempre en Órbita."
+  },
+  "auth": {
+    "signIn": "Iniciar Sesión",
+    "createAccount": "Crear Cuenta",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "fullName": "Nombre Completo",
+    "createPassword": "Crear Contraseña",
+    "secureLogin": "Inicio Seguro",
+    "joinUs": "¡Únete!",
+    "forgotPassword": "¿Olvidaste tu Contraseña?",
+    "loginWithGoogle": "Iniciar con Google",
+    "termsAgreement": "Al unirte, aceptas nuestros términos y condiciones.",
+    "swipeToStart": "Desliza a la derecha para comenzar"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido a tu panel",
+    "healthcare": "Salud",
+    "housing": "Vivienda",
+    "food": "Alimentos",
+    "transportation": "Transporte",
+    "ssi": "SSI e Impuestos"
+  },
+  "benefits": {
+    "healthcare": {
+      "title": "Beneficios de Salud",
+      "medicaid": "Medicaid",
+      "medicare": "Medicare",
+      "aca": "Subsidios ACA",
+      "tricare": "TRICARE",
+      "va": "Atención Médica VA"
+    },
+    "housing": {
+      "title": "Beneficios de Vivienda",
+      "section8": "Sección 8",
+      "publicHousing": "Vivienda Pública",
+      "hudvash": "HUD-VASH",
+      "liheap": "LIHEAP",
+      "era": "Asistencia de Alquiler de Emergencia"
+    },
+    "food": {
+      "title": "Beneficios de Alimentos",
+      "snap": "SNAP",
+      "wic": "WIC",
+      "csfp": "Programa de Alimentos para Mayores",
+      "tefap": "Asistencia Alimentaria de Emergencia"
+    },
+    "transportation": {
+      "title": "Beneficios de Transporte",
+      "nemt": "Transporte Médico",
+      "paratransit": "Paratránsito",
+      "veterans": "Transporte para Veteranos"
+    },
+    "ssi": {
+      "title": "Beneficios de SSI e Impuestos",
+      "ssi": "Ingreso de Seguridad Suplementario",
+      "ssdi": "Seguro de Discapacidad del Seguro Social",
+      "eitc": "Crédito Tributario por Ingreso del Trabajo",
+      "ctc": "Crédito Tributario por Hijos"
+    }
+  },
+  "profile": {
+    "title": "Configuración del Perfil",
+    "language": "Idioma",
+    "accessibility": "Accesibilidad",
+    "fontSize": "Tamaño de Fuente",
+    "colorBlindness": "Filtro de Daltonismo",
+    "dyslexiaFont": "Fuente para Dislexia",
+    "highContrast": "Modo de Alto Contraste",
+    "narration": "Narración por Voz"
+  },
+  "accessibility": {
+    "small": "Pequeño",
+    "medium": "Mediano",
+    "large": "Grande",
+    "none": "Ninguno",
+    "protanopia": "Protanopía (Ciego al Rojo)",
+    "deuteranopia": "Deuteranopía (Ciego al Verde)",
+    "tritanopia": "Tritanopía (Ciego al Azul)"
+  },
+  "voice": {
+    "listening": "Escuchando...",
+    "processing": "Procesando comando...",
+    "clickToSpeak": "Haz clic para hablar"
+  },
+  "alerts": {
+    "title": "Notificaciones",
+    "noAlerts": "Sin alertas nuevas",
+    "incomeChange": "Cambio de Ingreso Detectado",
+    "ruleUpdate": "Regla de Beneficio Actualizada",
+    "benefitAdjustment": "Monto de Beneficio Ajustado"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "apply": "Aplicar",
+    "calculate": "Calcular",
+    "learnMore": "Más Información",
+    "back": "Atrás",
+    "next": "Siguiente"
+  }
+}
+

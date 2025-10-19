@@ -1,0 +1,109 @@
+{
+  "app": {
+    "title": "POLARA",
+    "tagline": "Ang Iyong Pinansyal na Bituin sa Hilaga. Laging sa Orbit."
+  },
+  "auth": {
+    "signIn": "Mag-sign In",
+    "createAccount": "Lumikha ng Account",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Buong Pangalan",
+    "createPassword": "Lumikha ng Password",
+    "secureLogin": "Secure na Login",
+    "joinUs": "Sumali sa amin!",
+    "forgotPassword": "Nakalimutan ang Password?",
+    "loginWithGoogle": "Mag-login gamit ang Google",
+    "termsAgreement": "Sa pagsali, sumasang-ayon ka sa aming mga tuntunin at kondisyon.",
+    "swipeToStart": "Mag-swipe pakanan upang magsimula"
+  },
+  "dashboard": {
+    "welcome": "Maligayang pagdating sa iyong dashboard",
+    "healthcare": "Kalusugan",
+    "housing": "Pabahay",
+    "food": "Pagkain",
+    "transportation": "Transportasyon",
+    "ssi": "SSI at Buwis"
+  },
+  "benefits": {
+    "healthcare": {
+      "title": "Mga Benepisyo sa Kalusugan",
+      "medicaid": "Medicaid",
+      "medicare": "Medicare",
+      "aca": "Subsidyo sa ACA",
+      "tricare": "TRICARE",
+      "va": "VA Health Care"
+    },
+    "housing": {
+      "title": "Mga Benepisyo sa Pabahay",
+      "section8": "Section 8",
+      "publicHousing": "Pampublikong Pabahay",
+      "hudvash": "HUD-VASH",
+      "liheap": "LIHEAP",
+      "era": "Tulong sa Upa ng Emergency"
+    },
+    "food": {
+      "title": "Mga Benepisyo sa Pagkain",
+      "snap": "SNAP",
+      "wic": "WIC",
+      "csfp": "Programa ng Pagkain para sa mga Matatanda",
+      "tefap": "Tulong sa Pagkain ng Emergency"
+    },
+    "transportation": {
+      "title": "Mga Benepisyo sa Transportasyon",
+      "nemt": "Medikal na Transportasyon",
+      "paratransit": "Paratransit",
+      "veterans": "Transportasyon ng mga Beterano"
+    },
+    "ssi": {
+      "title": "Mga Benepisyo ng SSI at Buwis",
+      "ssi": "Supplemental Security Income",
+      "ssdi": "Social Security Disability Insurance",
+      "eitc": "Earned Income Tax Credit",
+      "ctc": "Child Tax Credit"
+    }
+  },
+  "profile": {
+    "title": "Mga Setting ng Profile",
+    "language": "Wika",
+    "accessibility": "Accessibility",
+    "fontSize": "Laki ng Font",
+    "colorBlindness": "Filter para sa Kulang sa Kulay",
+    "dyslexiaFont": "Font para sa Dyslexia",
+    "highContrast": "High Contrast Mode",
+    "narration": "Voice Narration"
+  },
+  "accessibility": {
+    "small": "Maliit",
+    "medium": "Katamtaman",
+    "large": "Malaki",
+    "none": "Wala",
+    "protanopia": "Protanopia (Bulag sa Pula)",
+    "deuteranopia": "Deuteranopia (Bulag sa Berde)",
+    "tritanopia": "Tritanopia (Bulag sa Asul)"
+  },
+  "voice": {
+    "listening": "Nakikinig...",
+    "processing": "Pinoproseso ang utos...",
+    "clickToSpeak": "I-click upang magsalita"
+  },
+  "alerts": {
+    "title": "Mga Notification",
+    "noAlerts": "Walang bagong alerto",
+    "incomeChange": "Nakita ang Pagbabago sa Kita",
+    "ruleUpdate": "Na-update ang Patakaran ng Benepisyo",
+    "benefitAdjustment": "Naadjust ang Halaga ng Benepisyo"
+  },
+  "common": {
+    "loading": "Naglo-load...",
+    "error": "Nagkaroon ng error",
+    "save": "I-save",
+    "cancel": "Kanselahin",
+    "apply": "Ilapat",
+    "calculate": "Kalkulahin",
+    "learnMore": "Matuto Pa",
+    "back": "Bumalik",
+    "next": "Susunod"
+  }
+}
+

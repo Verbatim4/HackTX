@@ -1,0 +1,109 @@
+{
+  "app": {
+    "title": "POLARA",
+    "tagline": "आपका वित्तीय ध्रुव तारा। हमेशा कक्षा में।"
+  },
+  "auth": {
+    "signIn": "साइन इन करें",
+    "createAccount": "खाता बनाएं",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "fullName": "पूरा नाम",
+    "createPassword": "पासवर्ड बनाएं",
+    "secureLogin": "सुरक्षित लॉगिन",
+    "joinUs": "हमसे जुड़ें!",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "loginWithGoogle": "Google से लॉगिन करें",
+    "termsAgreement": "शामिल होकर, आप हमारे नियमों और शर्तों से सहमत हैं।",
+    "swipeToStart": "शुरू करने के लिए दाईं ओर स्वाइप करें"
+  },
+  "dashboard": {
+    "welcome": "आपके डैशबोर्ड में आपका स्वागत है",
+    "healthcare": "स्वास्थ्य सेवा",
+    "housing": "आवास",
+    "food": "भोजन",
+    "transportation": "परिवहन",
+    "ssi": "SSI और कर"
+  },
+  "benefits": {
+    "healthcare": {
+      "title": "स्वास्थ्य सेवा लाभ",
+      "medicaid": "मेडिकेड",
+      "medicare": "मेडिकेयर",
+      "aca": "ACA सब्सिडी",
+      "tricare": "TRICARE",
+      "va": "VA स्वास्थ्य देखभाल"
+    },
+    "housing": {
+      "title": "आवास लाभ",
+      "section8": "धारा 8",
+      "publicHousing": "सार्वजनिक आवास",
+      "hudvash": "HUD-VASH",
+      "liheap": "LIHEAP",
+      "era": "आपातकालीन किराया सहायता"
+    },
+    "food": {
+      "title": "भोजन लाभ",
+      "snap": "SNAP",
+      "wic": "WIC",
+      "csfp": "वरिष्ठ भोजन कार्यक्रम",
+      "tefap": "आपातकालीन खाद्य सहायता"
+    },
+    "transportation": {
+      "title": "परिवहन लाभ",
+      "nemt": "चिकित्सा परिवहन",
+      "paratransit": "पैराट्रांजिट",
+      "veterans": "दिग्गज परिवहन"
+    },
+    "ssi": {
+      "title": "SSI और कर लाभ",
+      "ssi": "पूरक सुरक्षा आय",
+      "ssdi": "सामाजिक सुरक्षा विकलांगता बीमा",
+      "eitc": "अर्जित आय कर क्रेडिट",
+      "ctc": "बाल कर क्रेडिट"
+    }
+  },
+  "profile": {
+    "title": "प्रोफ़ाइल सेटिंग्स",
+    "language": "भाषा",
+    "accessibility": "पहुँच योग्यता",
+    "fontSize": "फ़ॉन्ट आकार",
+    "colorBlindness": "वर्णान्धता फ़िल्टर",
+    "dyslexiaFont": "डिस्लेक्सिया-फ्रेंडली फ़ॉन्ट",
+    "highContrast": "उच्च कंट्रास्ट मोड",
+    "narration": "आवाज़ कथन"
+  },
+  "accessibility": {
+    "small": "छोटा",
+    "medium": "मध्यम",
+    "large": "बड़ा",
+    "none": "कोई नहीं",
+    "protanopia": "प्रोटानोपिया (लाल-अंधा)",
+    "deuteranopia": "ड्यूटेरानोपिया (हरा-अंधा)",
+    "tritanopia": "ट्रिटानोपिया (नीला-अंधा)"
+  },
+  "voice": {
+    "listening": "सुन रहा है...",
+    "processing": "आदेश संसाधित कर रहा है...",
+    "clickToSpeak": "बोलने के लिए क्लिक करें"
+  },
+  "alerts": {
+    "title": "सूचनाएं",
+    "noAlerts": "कोई नई सूचना नहीं",
+    "incomeChange": "आय परिवर्तन का पता चला",
+    "ruleUpdate": "लाभ नियम अपडेट किया गया",
+    "benefitAdjustment": "लाभ राशि समायोजित"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "एक त्रुटि हुई",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "apply": "लागू करें",
+    "calculate": "गणना करें",
+    "learnMore": "और जानें",
+    "back": "पीछे",
+    "next": "अगला"
+  }
+}
+

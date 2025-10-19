@@ -1,0 +1,109 @@
+{
+  "app": {
+    "title": "POLARA",
+    "tagline": "Ngôi Sao Phương Bắc Tài Chính Của Bạn. Luôn Trên Quỹ Đạo."
+  },
+  "auth": {
+    "signIn": "Đăng Nhập",
+    "createAccount": "Tạo Tài Khoản",
+    "email": "Email",
+    "password": "Mật Khẩu",
+    "fullName": "Họ và Tên",
+    "createPassword": "Tạo Mật Khẩu",
+    "secureLogin": "Đăng Nhập An Toàn",
+    "joinUs": "Tham Gia!",
+    "forgotPassword": "Quên Mật Khẩu?",
+    "loginWithGoogle": "Đăng Nhập Bằng Google",
+    "termsAgreement": "Bằng cách tham gia, bạn đồng ý với các điều khoản và điều kiện của chúng tôi.",
+    "swipeToStart": "Vuốt sang phải để bắt đầu"
+  },
+  "dashboard": {
+    "welcome": "Chào mừng đến với bảng điều khiển của bạn",
+    "healthcare": "Chăm Sóc Sức Khỏe",
+    "housing": "Nhà Ở",
+    "food": "Thực Phẩm",
+    "transportation": "Giao Thông",
+    "ssi": "SSI và Thuế"
+  },
+  "benefits": {
+    "healthcare": {
+      "title": "Phúc Lợi Chăm Sóc Sức Khỏe",
+      "medicaid": "Medicaid",
+      "medicare": "Medicare",
+      "aca": "Trợ Cấp ACA",
+      "tricare": "TRICARE",
+      "va": "Chăm Sóc Sức Khỏe VA"
+    },
+    "housing": {
+      "title": "Phúc Lợi Nhà Ở",
+      "section8": "Điều 8",
+      "publicHousing": "Nhà Ở Công Cộng",
+      "hudvash": "HUD-VASH",
+      "liheap": "LIHEAP",
+      "era": "Hỗ Trợ Thuê Nhà Khẩn Cấp"
+    },
+    "food": {
+      "title": "Phúc Lợi Thực Phẩm",
+      "snap": "SNAP",
+      "wic": "WIC",
+      "csfp": "Chương Trình Thực Phẩm Người Cao Tuổi",
+      "tefap": "Hỗ Trợ Thực Phẩm Khẩn Cấp"
+    },
+    "transportation": {
+      "title": "Phúc Lợi Giao Thông",
+      "nemt": "Giao Thông Y Tế",
+      "paratransit": "Paratransit",
+      "veterans": "Giao Thông Cựu Chiến Binh"
+    },
+    "ssi": {
+      "title": "Phúc Lợi SSI và Thuế",
+      "ssi": "Thu Nhập An Sinh Bổ Sung",
+      "ssdi": "Bảo Hiểm Khuyết Tật An Sinh Xã Hội",
+      "eitc": "Tín Dụng Thuế Thu Nhập Kiếm Được",
+      "ctc": "Tín Dụng Thuế Trẻ Em"
+    }
+  },
+  "profile": {
+    "title": "Cài Đặt Hồ Sơ",
+    "language": "Ngôn Ngữ",
+    "accessibility": "Khả Năng Truy Cập",
+    "fontSize": "Kích Thước Phông Chữ",
+    "colorBlindness": "Bộ Lọc Mù Màu",
+    "dyslexiaFont": "Phông Chữ Cho Chứng Khó Đọc",
+    "highContrast": "Chế Độ Tương Phản Cao",
+    "narration": "Kể Chuyện Bằng Giọng Nói"
+  },
+  "accessibility": {
+    "small": "Nhỏ",
+    "medium": "Trung Bình",
+    "large": "Lớn",
+    "none": "Không",
+    "protanopia": "Protanopia (Mù Màu Đỏ)",
+    "deuteranopia": "Deuteranopia (Mù Màu Xanh Lá)",
+    "tritanopia": "Tritanopia (Mù Màu Xanh Dương)"
+  },
+  "voice": {
+    "listening": "Đang Nghe...",
+    "processing": "Đang Xử Lý Lệnh...",
+    "clickToSpeak": "Nhấp Để Nói"
+  },
+  "alerts": {
+    "title": "Thông Báo",
+    "noAlerts": "Không có cảnh báo mới",
+    "incomeChange": "Phát Hiện Thay Đổi Thu Nhập",
+    "ruleUpdate": "Quy Tắc Phúc Lợi Được Cập Nhật",
+    "benefitAdjustment": "Số Tiền Phúc Lợi Được Điều Chỉnh"
+  },
+  "common": {
+    "loading": "Đang Tải...",
+    "error": "Đã xảy ra lỗi",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "apply": "Áp Dụng",
+    "calculate": "Tính Toán",
+    "learnMore": "Tìm Hiểu Thêm",
+    "back": "Quay Lại",
+    "next": "Tiếp Theo"
+  }
+}
+

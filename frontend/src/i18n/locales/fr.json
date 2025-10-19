@@ -1,0 +1,109 @@
+{
+  "app": {
+    "title": "POLARA",
+    "tagline": "Votre Étoile du Nord Financière. Toujours en Orbite."
+  },
+  "auth": {
+    "signIn": "Se Connecter",
+    "createAccount": "Créer un Compte",
+    "email": "E-mail",
+    "password": "Mot de Passe",
+    "fullName": "Nom Complet",
+    "createPassword": "Créer un Mot de Passe",
+    "secureLogin": "Connexion Sécurisée",
+    "joinUs": "Rejoignez-nous!",
+    "forgotPassword": "Mot de Passe Oublié?",
+    "loginWithGoogle": "Se Connecter avec Google",
+    "termsAgreement": "En rejoignant, vous acceptez nos conditions générales.",
+    "swipeToStart": "Glissez vers la droite pour commencer"
+  },
+  "dashboard": {
+    "welcome": "Bienvenue sur votre tableau de bord",
+    "healthcare": "Santé",
+    "housing": "Logement",
+    "food": "Alimentation",
+    "transportation": "Transport",
+    "ssi": "SSI et Impôts"
+  },
+  "benefits": {
+    "healthcare": {
+      "title": "Prestations de Santé",
+      "medicaid": "Medicaid",
+      "medicare": "Medicare",
+      "aca": "Subventions ACA",
+      "tricare": "TRICARE",
+      "va": "Soins de Santé VA"
+    },
+    "housing": {
+      "title": "Prestations de Logement",
+      "section8": "Section 8",
+      "publicHousing": "Logement Public",
+      "hudvash": "HUD-VASH",
+      "liheap": "LIHEAP",
+      "era": "Aide au Loyer d'Urgence"
+    },
+    "food": {
+      "title": "Prestations Alimentaires",
+      "snap": "SNAP",
+      "wic": "WIC",
+      "csfp": "Programme Alimentaire pour Seniors",
+      "tefap": "Aide Alimentaire d'Urgence"
+    },
+    "transportation": {
+      "title": "Prestations de Transport",
+      "nemt": "Transport Médical",
+      "paratransit": "Paratransit",
+      "veterans": "Transport pour Vétérans"
+    },
+    "ssi": {
+      "title": "Prestations SSI et Fiscales",
+      "ssi": "Revenu de Sécurité Supplémentaire",
+      "ssdi": "Assurance Invalidité de la Sécurité Sociale",
+      "eitc": "Crédit d'Impôt sur le Revenu Gagné",
+      "ctc": "Crédit d'Impôt pour Enfants"
+    }
+  },
+  "profile": {
+    "title": "Paramètres du Profil",
+    "language": "Langue",
+    "accessibility": "Accessibilité",
+    "fontSize": "Taille de Police",
+    "colorBlindness": "Filtre de Daltonisme",
+    "dyslexiaFont": "Police pour Dyslexie",
+    "highContrast": "Mode Contraste Élevé",
+    "narration": "Narration Vocale"
+  },
+  "accessibility": {
+    "small": "Petit",
+    "medium": "Moyen",
+    "large": "Grand",
+    "none": "Aucun",
+    "protanopia": "Protanopie (Aveugle au Rouge)",
+    "deuteranopia": "Deutéranopie (Aveugle au Vert)",
+    "tritanopia": "Tritanopie (Aveugle au Bleu)"
+  },
+  "voice": {
+    "listening": "Écoute...",
+    "processing": "Traitement de la commande...",
+    "clickToSpeak": "Cliquez pour parler"
+  },
+  "alerts": {
+    "title": "Notifications",
+    "noAlerts": "Aucune nouvelle alerte",
+    "incomeChange": "Changement de Revenu Détecté",
+    "ruleUpdate": "Règle de Prestation Mise à Jour",
+    "benefitAdjustment": "Montant de Prestation Ajusté"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "apply": "Appliquer",
+    "calculate": "Calculer",
+    "learnMore": "En Savoir Plus",
+    "back": "Retour",
+    "next": "Suivant"
+  }
+}
+

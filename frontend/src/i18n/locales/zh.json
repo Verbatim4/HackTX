@@ -1,0 +1,109 @@
+{
+  "app": {
+    "title": "POLARA",
+    "tagline": "您的财务北极星。始终在轨道上。"
+  },
+  "auth": {
+    "signIn": "登录",
+    "createAccount": "创建账户",
+    "email": "电子邮件",
+    "password": "密码",
+    "fullName": "全名",
+    "createPassword": "创建密码",
+    "secureLogin": "安全登录",
+    "joinUs": "加入我们！",
+    "forgotPassword": "忘记密码？",
+    "loginWithGoogle": "使用Google登录",
+    "termsAgreement": "加入即表示您同意我们的条款和条件。",
+    "swipeToStart": "向右滑动开始"
+  },
+  "dashboard": {
+    "welcome": "欢迎来到您的仪表板",
+    "healthcare": "医疗保健",
+    "housing": "住房",
+    "food": "食品",
+    "transportation": "交通",
+    "ssi": "SSI和税收"
+  },
+  "benefits": {
+    "healthcare": {
+      "title": "医疗保健福利",
+      "medicaid": "医疗补助",
+      "medicare": "医疗保险",
+      "aca": "ACA补贴",
+      "tricare": "TRICARE",
+      "va": "退伍军人医疗"
+    },
+    "housing": {
+      "title": "住房福利",
+      "section8": "第8条",
+      "publicHousing": "公共住房",
+      "hudvash": "HUD-VASH",
+      "liheap": "LIHEAP",
+      "era": "紧急租金援助"
+    },
+    "food": {
+      "title": "食品福利",
+      "snap": "SNAP",
+      "wic": "WIC",
+      "csfp": "老年人食品计划",
+      "tefap": "紧急食品援助"
+    },
+    "transportation": {
+      "title": "交通福利",
+      "nemt": "医疗交通",
+      "paratransit": "辅助交通",
+      "veterans": "退伍军人交通"
+    },
+    "ssi": {
+      "title": "SSI和税收福利",
+      "ssi": "补充保障收入",
+      "ssdi": "社会保障残疾保险",
+      "eitc": "劳动所得税抵免",
+      "ctc": "儿童税收抵免"
+    }
+  },
+  "profile": {
+    "title": "个人资料设置",
+    "language": "语言",
+    "accessibility": "无障碍功能",
+    "fontSize": "字体大小",
+    "colorBlindness": "色盲滤镜",
+    "dyslexiaFont": "阅读障碍字体",
+    "highContrast": "高对比度模式",
+    "narration": "语音讲述"
+  },
+  "accessibility": {
+    "small": "小",
+    "medium": "中",
+    "large": "大",
+    "none": "无",
+    "protanopia": "红色盲",
+    "deuteranopia": "绿色盲",
+    "tritanopia": "蓝色盲"
+  },
+  "voice": {
+    "listening": "正在聆听...",
+    "processing": "正在处理命令...",
+    "clickToSpeak": "点击说话"
+  },
+  "alerts": {
+    "title": "通知",
+    "noAlerts": "没有新提醒",
+    "incomeChange": "检测到收入变化",
+    "ruleUpdate": "福利规则已更新",
+    "benefitAdjustment": "福利金额已调整"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "发生错误",
+    "save": "保存",
+    "cancel": "取消",
+    "apply": "应用",
+    "calculate": "计算",
+    "learnMore": "了解更多",
+    "back": "返回",
+    "next": "下一步"
+  }
+}
+
